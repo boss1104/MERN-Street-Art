@@ -9,4 +9,8 @@ router.get('/secret', isLoggedIn, (req, res, next) => {
   });
 });
 
+router.get("/me", isLoggedIn, (req,res,next) => {
+  res.json(req.user)
+})
+
 module.exports = router;

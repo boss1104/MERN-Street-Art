@@ -29,11 +29,12 @@ router.post('/visits', isLoggedIn, (req, res, next) => {
     })
 })
 
-router.delete('/visits/:visitId', (req, res, next) => {
+router.delete('/visits/:visitId', isLoggedIn, (req, res, next) => {
+	console.log("A", req.params.visitId)
   Visit.findById(req.params.visitId)
     .then(visit => {
-      if (visit._user === req.user_id) {
-        Visit.findByIdAndRemove(req.params.id)
+      if (visit._user.equals(req.user._id)) {
+        Visit.findByIdAndRemove(req.params.visitId)
           .then(() => {
             res.json({ message: 'The visit was successfully deleted' });
           })
@@ -41,10 +42,10 @@ router.delete('/visits/:visitId', (req, res, next) => {
             res.json(err);
           })
       }
- else {
-      res.json({ message: 'You are NOT ALLOWED to delete this visit' });
-    }
-  })
+      else {
+        res.json({ message: 'You are NOT ALLOWED to delete this visit' });
+      }
+    })
     .catch(err => {
       res.json(err);
     })
